@@ -1,4 +1,12 @@
+import MainLayout from '@/layouts/MainLayout'
+import ConfigurationForm from './ConfigurationForm'
+
 const ConfigurationPage = () => {
-  return <h1>Configuración del Comercio</h1>
+  return (
+    <MainLayout>
+      <ConfigurationForm />
+    </MainLayout>
+  )
 }
- export default ConfigurationPage
+
+export default ConfigurationPage

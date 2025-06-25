@@ -1,10 +1,17 @@
 // src/pages/Login.tsx
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/schemas/loginSchema";
 import { Box, Button, TextField, Typography, Paper } from "@mui/material";
+import { useAuthStore } from '@/store/useAuthStore'
+import { useNavigate } from 'react-router-dom'
+
 
 const LoginPage = () => {
+  const navigate = useNavigate()
+
+  const { setAuth } = useAuthStore()
   const {
     register,
     handleSubmit,
@@ -15,7 +22,7 @@ const LoginPage = () => {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -25,8 +32,10 @@ const LoginPage = () => {
 
       if (!res.ok) throw new Error(result.message);
 
-      localStorage.setItem("token", result.token);
-      // Redirigir al dashboard o página de inicio
+      setAuth(result.data.token,result.data.user)
+      navigate('/dashboard', {replace: true})
+
+      
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.log(err.message);
@@ -100,9 +109,9 @@ const LoginPage = () => {
         </Button>
         <Typography variant="subtitle2" align="center" sx={{ mt: 2 }}>
           ¿No tienes una cuenta?{' '}
-          <a href="/signup" style={{ color: '#1976d2', textDecoration: 'none' }}>
-            Regístrate aquí
-          </a>
+          <Link to="/signup" style={{ color: '#1976d2', textDecoration: 'none' }}>
+            Regístrate
+          </Link>
         </Typography>
 
       </Paper>
