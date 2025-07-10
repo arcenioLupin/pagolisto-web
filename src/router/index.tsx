@@ -6,6 +6,8 @@ import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import MainLayout from "@/layouts/MainLayout";
 import DashboardPage from "@/pages/Dashboard/DashboardPage";
+import PaymentRequestsPage from "@/pages/PaymentRequests/PaymentRequestsPage";
+import PublicMarkAsPaidPage from "@/pages/public/PublicMarkAsPaidPage";
 
 export const AppRouter = () => {
   return (
@@ -48,6 +50,25 @@ export const AppRouter = () => {
           </PrivateRoute>
           } 
         />
+
+        <Route path="/payment-requests" element={
+          <PrivateRoute>
+            <MainLayout>
+              <PaymentRequestsPage />
+            </MainLayout>
+          </PrivateRoute>
+          } 
+        />
+
+        <Route
+          path="/mark-paid/:token"
+          element={
+            <PublicRoute redirectTo="/dashboard">
+              <PublicMarkAsPaidPage />
+            </PublicRoute>
+          }
+        />
+        
       </Routes>
     </BrowserRouter>
   );

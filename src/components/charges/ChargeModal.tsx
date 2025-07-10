@@ -29,7 +29,7 @@ interface ChargeModalProps {
 const paymentTypes = ['Yape', 'Plin', 'Efectivo']
 
 const ChargeModal = ({ open, onClose, initialData  }: ChargeModalProps) => {
-  const { enqueueSnackbar } = useSnackbar();
+   const { enqueueSnackbar } = useSnackbar();
    const addCharge = useChargeStore(state => state.addCharge)
   const updateCharge = useChargeStore(state => state.updateCharge)
   const { token } = useAuth()

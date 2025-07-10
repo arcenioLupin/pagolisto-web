@@ -16,7 +16,10 @@ import {
   Typography,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
-import { useNavigate } from 'react-router-dom'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import SettingsIcon from '@mui/icons-material/Settings'
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, type ReactNode } from 'react'
 
 const drawerWidth = 240
@@ -28,6 +31,7 @@ type MainLayoutProps = {
 const MainLayout = ({ children }: MainLayoutProps) => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleDrawerToggle = () => {
@@ -40,8 +44,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   }
 
   const menuItems = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Configuración', path: '/configuration' },
+    { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
+    { label: 'Configuration', path: '/configuration', icon: <SettingsIcon /> },
+    { label: 'Payment Requests', path: '/payment-requests', icon: <RequestQuoteIcon /> },
   ]
 
   const drawerContent = (
@@ -61,6 +66,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                 navigate(item.path)
                 setMobileOpen(false)
               }}
+              selected={location.pathname === item.path}
               sx={{
                 borderRadius: 2,
                 mx: 1,
@@ -68,8 +74,17 @@ const MainLayout = ({ children }: MainLayoutProps) => {
                 '&:hover': {
                   backgroundColor: '#e3f2fd',
                 },
+                '&.Mui-selected': {
+                  backgroundColor: '#bbdefb',
+                  '&:hover': {
+                    backgroundColor: '#90caf9',
+                  },
+                },
               }}
             >
+              <Box component="span" sx={{ minWidth: 36, color: '#1976d2' }}>
+                {item.icon}
+              </Box>
               <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>
@@ -82,7 +97,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
 
-      {/* AppBar superior */}
       <AppBar
         position="fixed"
         sx={{
@@ -113,7 +127,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer lateral */}
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -152,7 +165,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
         </Drawer>
       </Box>
 
-      {/* Contenido principal */}
       <Box
         component="main"
         sx={{
