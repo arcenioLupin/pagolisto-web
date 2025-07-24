@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   Box,
   Typography,
@@ -14,63 +13,14 @@ import {
 } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import type { ChargesTableProps } from '@/interface/charges';
+import { capitalize, getStatusColor } from '@/utils/chargesUtils';
+import useChargeComponent from './hooks/useChargeTable';
 
-export interface Charge {
-  _id: string
-  client: string
-  amount: number
-  paymentType: string
-  status: string
-  createdAt: string
-  description?: string
-  expirationDate?: Date | string | undefined
-}
-
-interface ChargesTableProps {
-  charges: Charge[];
-  onEdit?: (charge: Charge) => void;
-  onDelete?: (id: string) => void;
-}
-
-// Capitaliza la primera letra
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
-// Retorna el color del chip según estado
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'pending':
-      return 'warning'
-    case 'paid':
-      return 'success'
-    case 'cancelled':
-      return 'default'
-    case 'expired':
-      return 'error'
-    default:
-      return 'default'
-  }
-}
 
 const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
 
-
-  const handleChangePage = (_event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
- 
-
-  const paginatedCharges = charges.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  )
+  const {handleChangePage, paginatedCharges, page, rowsPerPage, handleChangeRowsPerPage } = useChargeComponent(charges);
 
   if (charges.length === 0) {
     return (
@@ -83,7 +33,6 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
   }
 
   
-
   return (
     <Paper elevation={0} sx={{ p: 2, borderRadius: '8px' }}>
       <Table>
@@ -95,12 +44,11 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
               '& > th:last-of-type': { borderTopRightRadius: '8px' }
             }}
           >
-            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Client</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Amount</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Payment Method</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Status</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Created At</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Expires At</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Cliente</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Monto</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Método de pago</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Estado</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Fecha creación</TableCell>
             <TableCell align="center" sx={{ fontWeight: 'bold', color: '#333' }}>
               Actions
             </TableCell>
@@ -123,12 +71,10 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
                     justifyContent: 'center',
                     textTransform: 'capitalize',
                   }}
+                   onClick={() => {}} // sin efectos, pero evita error
                 />
               </TableCell>
               <TableCell>{new Date(charge.createdAt).toLocaleString()}</TableCell>
-              <TableCell>
-                {charge.expirationDate ? new Date(charge.expirationDate).toLocaleDateString() : '—'}
-              </TableCell>
               <TableCell align="center">
                 <IconButton color="primary" onClick={() => onEdit?.(charge)}>
                   <EditIcon fontSize="small" />

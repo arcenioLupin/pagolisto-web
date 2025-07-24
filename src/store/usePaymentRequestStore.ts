@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from 'zustand'
-import { type PaymentRequest } from '@/types/paymentRequest'
+import { type PaymentRequest } from '@/interface/paymentRequest'
 import {type  NewPaymentRequestFormData } from '@/schemas/newPaymentRequestSchema'
 
 interface PaymentRequestState {

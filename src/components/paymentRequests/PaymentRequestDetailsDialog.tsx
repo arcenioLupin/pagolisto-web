@@ -12,35 +12,17 @@ import {
   Chip,
 } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import { useSnackbar } from 'notistack'
-import { type PaymentRequest } from '@/types/paymentRequest'
-import { getExpirationStatus } from '@/utils/paymentRequestUtils'
+import { type DetailDialogProps } from '@/interface/paymentRequest'
+import usePaymentRequestDetailDialog from './hooks/usePaymentRequestDetailDialog'
 
-interface Props {
-  open: boolean
-  onClose: () => void
-  request: PaymentRequest | null
-}
+const PaymentRequestDetailsDialog = ({ open, onClose, request }: DetailDialogProps) => {
 
-const PaymentRequestDetailsDialog = ({ open, onClose, request }: Props) => {
-  const { enqueueSnackbar } = useSnackbar()
-
-  if (!request) return null
-
-  const clientUrl = `${window.location.origin}/mark-paid/${request.publicToken}`
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(clientUrl)
-    enqueueSnackbar('🔗 Link copiado al portapapeles', { variant: 'success' })
-  }
-
-  const formatDate = (iso?: string) =>
-    iso ? new Date(iso).toLocaleDateString() : '—'
-
-  const status = getExpirationStatus(request.expirationDate)
+  const dialogUtils = usePaymentRequestDetailDialog(request)
+  if (!dialogUtils || !request) return null
+  const { handleCopy, formatDate, status, clientUrl } = dialogUtils
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" disableEnforceFocus>
       <DialogTitle>Detalles de la Solicitud de Pago</DialogTitle>
       <DialogContent dividers>
         <Typography><strong>Cliente:</strong> {request.client}</Typography>
@@ -60,8 +42,6 @@ const PaymentRequestDetailsDialog = ({ open, onClose, request }: Props) => {
         </Box>
 
         <Typography><strong>Descripción:</strong> {request.description || '—'}</Typography>
-
-       
 
         {request.status === 'pending'  &&  (<><Divider sx={{ my: 2 }} /> <Box display="flex" alignItems="center" gap={1}>
           <Typography sx={{ fontWeight: 'bold' }}>Enlace para cliente:</Typography>

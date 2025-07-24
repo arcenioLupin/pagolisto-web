@@ -8,63 +8,31 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  Typography,
-  Chip,
-  IconButton,
-  Tooltip,
+  Typography
 } from '@mui/material'
-import { useState } from 'react'
-import { type PaymentRequest } from '@/types/paymentRequest'
+
 import { formatMoney } from '@/utils/paymentRequestUtils'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import PaymentRequestActions from './PaymentRequestActions'
+import type { PaymentRequestsTableProps } from '@/interface/paymentRequest'
+import usePaymentRequestTable from './hooks/usePaymentRequestTable'
 
-interface PaymentRequestsTableProps {
-  paymentRequests: PaymentRequest[]
-  onView: (request: PaymentRequest) => void
-  onMarkAsPaid: (id: string) => void
-}
 
-const PaymentRequestsTable = ({ paymentRequests, onView, onMarkAsPaid }: PaymentRequestsTableProps) => {
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
-
-  const paginated = paymentRequests.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  )
-
-  const handleChangePage = (_: unknown, newPage: number) => setPage(newPage)
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
-const renderStatusChip = (status?: string) => {
-  const colorMap: Record<string, 'default' | 'success' | 'error' | 'warning'> = {
-    pending: 'warning',
-    paid: 'success',
-    expired: 'error',
-    cancelled: 'default',
-  }
-
-  const safeStatus = status ?? 'pending' // fallback
-  return (
-    <Chip
-      label={safeStatus.toUpperCase()}
-      color={colorMap[safeStatus] || 'default'}
-      size="small"
-    />
-  )
-}
+const PaymentRequestsTable = ({ paymentRequests, onView, onMarkAsPaid,fetchPaymentRequests }: PaymentRequestsTableProps) => {
+   const {
+    paginated,
+    handleChangePage,
+    page,
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    renderStatusChip,
+  } = usePaymentRequestTable(paymentRequests);
 
 
   if (paymentRequests.length === 0) {
     return (
       <Box mt={4}>
         <Typography variant="body2" color="textSecondary">
-          No payment requests found.
+          No se encontraron solicitudes de pago.
         </Typography>
       </Box>
     )
@@ -81,13 +49,13 @@ const renderStatusChip = (status?: string) => {
               '& > th:last-of-type': { borderTopRightRadius: '8px' }
             }}
           >
-            <TableCell sx={{ fontWeight: 'bold' }}>Client</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Amount</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Payment Type</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Expiration Date</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Created At</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Cliente</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Monto</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Tipo de pago</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Estado</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Fecha de Expiración</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Fecha de Creación</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Acciones</TableCell>
           </TableRow>
         </TableHead>
 
@@ -108,19 +76,14 @@ const renderStatusChip = (status?: string) => {
                 {new Date(req.createdAt).toLocaleDateString()}
               </TableCell>
               <TableCell>
-                <Tooltip title="View details">
-                  <IconButton onClick={() => onView(req)}>
-                    <VisibilityIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                {req.status === 'pending' && (
-                  <Tooltip title="Mark as paid">
-                    <IconButton color="success" onClick={() => onMarkAsPaid(req._id)}>
-                      <CheckCircleIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </TableCell>
+                <PaymentRequestActions
+                  request={req}
+                  onView={onView}
+                  onMarkAsPaid={onMarkAsPaid}
+                  onCancel={() => fetchPaymentRequests()} // o `fetchPaymentRequests()` si lo tienes así
+                />
+            </TableCell>
+
             </TableRow>
           ))}
         </TableBody>

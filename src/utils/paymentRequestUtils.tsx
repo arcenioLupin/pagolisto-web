@@ -1,6 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import EventAvailableIcon from '@mui/icons-material/EventAvailable'
 import EventBusyIcon from '@mui/icons-material/EventBusy'
+import { forwardRef } from 'react'
+import type { TransitionProps } from 'notistack'
+import { Slide } from '@mui/material'
 
 export const formatMoney = (amount: number, currency = 'PEN', locale = 'es-PE') => {
   return new Intl.NumberFormat(locale, {
@@ -9,8 +13,6 @@ export const formatMoney = (amount: number, currency = 'PEN', locale = 'es-PE') 
     minimumFractionDigits: 2,
   }).format(amount)
 }
-
-
 
 
 // Función para obtener estado visual de expiración
@@ -54,3 +56,10 @@ export const getExpirationStatus = (expirationDateStr?: string) => {
     icon: <EventAvailableIcon />,
   }
 }
+
+export const SlideUp = forwardRef(function Transition(
+  props: TransitionProps & { children: React.ReactElement },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />
+})

@@ -1,14 +1,15 @@
+import type { ChargesDeleteDialogProps } from '@/interface/charges'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import useChargeDeleteDialog from './hooks/useChargeDeleteDialog';
 
-interface ChargesDeleteDialogProps {
-  setDeleteDialogOpen: (open: boolean) => void ;
-  deleteDialogOpen: boolean;
-  confirmDelete: () => void;
-}
+
 
 const ChargesDeleteDialog = ({setDeleteDialogOpen, deleteDialogOpen, confirmDelete } : ChargesDeleteDialogProps) => {
+
+const { handleClose } = useChargeDeleteDialog(setDeleteDialogOpen);
+
   return (
-     <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+     <Dialog open={deleteDialogOpen} onClose={handleClose} disableEnforceFocus>
         <DialogTitle>¿Eliminar este cobro?</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -16,7 +17,7 @@ const ChargesDeleteDialog = ({setDeleteDialogOpen, deleteDialogOpen, confirmDele
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)} color="inherit">
+          <Button onClick={handleClose} color="inherit">
             Cancelar
           </Button>
           <Button onClick={confirmDelete} color="error" variant="contained">

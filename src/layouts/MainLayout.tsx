@@ -1,5 +1,3 @@
-// src/layouts/MainLayout.tsx
-import { useAuth } from '@/hooks/useAuth'
 import {
   AppBar,
   Box,
@@ -16,38 +14,20 @@ import {
   Typography,
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import SettingsIcon from '@mui/icons-material/Settings'
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { useState, type ReactNode } from 'react'
+import useMainLayout from '@/hooks/useMainLayout'
+import type { MainLayoutProps } from '@/types/mainLayout'
 
-const drawerWidth = 240
-
-type MainLayoutProps = {
-  children: ReactNode
-}
 
 const MainLayout = ({ children }: MainLayoutProps) => {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [mobileOpen, setMobileOpen] = useState(false)
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen)
-  }
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
-
-  const menuItems = [
-    { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
-    { label: 'Configuration', path: '/configuration', icon: <SettingsIcon /> },
-    { label: 'Payment Requests', path: '/payment-requests', icon: <RequestQuoteIcon /> },
-  ]
+  const { user,
+          mobileOpen,
+          handleDrawerToggle,
+          handleLogout,
+          menuItems,
+          location,
+          navigate,
+          setMobileOpen,
+          drawerWidth } = useMainLayout();
 
   const drawerContent = (
     <Box sx={{ p: 2 }}>

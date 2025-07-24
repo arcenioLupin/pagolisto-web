@@ -5,50 +5,11 @@ import {
   Button,
   Typography,
 } from '@mui/material'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { signupSchema, type SignupFormValues } from '@/schemas/signupSchema'
 import MainLayout from '@/layouts/MainLayout'
-import { useSnackbar } from 'notistack'
-import { useAuthStore } from '@/store/useAuthStore'
+import useSignup from '@/hooks/useSignup'
 
 const SignupPage = () => {
-  const { setAuth } = useAuthStore()
-  const { enqueueSnackbar } = useSnackbar()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<SignupFormValues>({
-    resolver: zodResolver(signupSchema),
-  })
-
-  const onSubmit = async (data: SignupFormValues) => {
-    try {
-      const res = await fetch('http://localhost:3000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-
-      const result = await res.json()
-
-      if (!res.ok) {
-      enqueueSnackbar('Hubo un problema al registrar el usuario', { variant: 'error' })
-      throw new Error(result.message)
-      }
-
-      setAuth(result.data.token, result.data.user)
-      enqueueSnackbar('Usuario registrado con éxito', { variant: 'success' })
-      // Aquí podrías redirigir a login si quieres
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message)
-      } else {
-        alert('Error desconocido al registrar')
-      }
-    }
-  }
+  const { register, handleSubmit, errors, isSubmitting, onSubmit } = useSignup()
 
   return (
     <MainLayout>
