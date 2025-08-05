@@ -13,6 +13,11 @@ import usePaymentRequestActions from './hooks/usePaymentRequestActions'
 const PaymentRequestActions = ({ request, onView, onMarkAsPaid, onCancel }: PaymentRequesActionsProps) => {
 
   const { handleCancel, openConfirm, setOpenConfirm, loading } = usePaymentRequestActions(request, onCancel);
+  const isPendingOrReview = ['pending', 'review_pending'].includes(request.status)
+  const tooltipText = request.status === 'review_pending'
+    ? 'Revisar y confirmar pago'
+    : 'Marcar como pagado'
+
 
   return (
     <>
@@ -22,13 +27,15 @@ const PaymentRequestActions = ({ request, onView, onMarkAsPaid, onCancel }: Paym
         </IconButton>
       </Tooltip>
 
-      {request.status === 'pending' && (
+      {['pending', 'review_pending'].includes(request.status)  && (
         <>
-          <Tooltip title="Marcar como pagado">
+          {
+            isPendingOrReview && <Tooltip title={tooltipText}>
             <IconButton color="success" onClick={() => onMarkAsPaid(request._id)}>
               <CheckCircleIcon fontSize="small" />
             </IconButton>
           </Tooltip>
+          }
 
           <Tooltip title="Cancelar solicitud de pago">
             <IconButton color="error" onClick={() => setOpenConfirm(true)}>

@@ -31,7 +31,7 @@ const PaymentRequestDetailsDialog = ({ open, onClose, request }: DetailDialogPro
         {request.status === 'paid' &&<Typography><strong>Fecha de pago:</strong> {formatDate(request.paymentDate)}</Typography>}
        <Box display="flex" alignItems="center" gap={5}>
             <Typography>
-                <strong>Estado:</strong> {request.status}
+                <strong>Estado:</strong> { request.status.replace('_', ' ').toLowerCase()}
             </Typography>
             <Chip
                 label={status.label}

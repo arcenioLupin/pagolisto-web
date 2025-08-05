@@ -5,9 +5,10 @@ import ConfiguracionPage from "@/pages/Configuration/ConfigurationPage";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import MainLayout from "@/layouts/MainLayout";
-import DashboardPage from "@/pages/Dashboard/DashboardPage";
 import PaymentRequestsPage from "@/pages/PaymentRequests/PaymentRequestsPage";
 import PublicMarkAsPaidPage from "@/pages/public/PublicMarkAsPaidPage";
+import ChargePage from "@/pages/Charge/ChargePage";
+import DashboardPage from "@/pages/Dashboard/DashboardPage";
 
 export const AppRouter = () => {
   return (
@@ -40,6 +41,15 @@ export const AppRouter = () => {
               <ConfiguracionPage />
             </PrivateRoute>
           }
+        />
+
+        <Route path="/charge" element={
+          <PrivateRoute>
+            <MainLayout>
+              <ChargePage />
+            </MainLayout>
+          </PrivateRoute>
+          } 
         />
 
         <Route path="/dashboard" element={

@@ -4,6 +4,7 @@ import { create } from 'zustand'
 interface User {
   email: string
   businessName: string
+  merchantId: string 
 }
 
 interface AuthState {

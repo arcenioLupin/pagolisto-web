@@ -21,8 +21,9 @@ const usePaymentRequestTable = (paymentRequests: PaymentRequest[]) => {
 
 
 const renderStatusChip = (status?: string) => {
-  const colorMap: Record<string, 'default' | 'success' | 'error' | 'warning'> = {
+  const colorMap: Record<string, 'default' | 'success' | 'error' | 'warning' | 'info'> = {
     pending: 'warning',
+    review_pending: 'info', // Nuevo estado
     paid: 'success',
     expired: 'error',
     cancelled: 'default',
@@ -32,10 +33,9 @@ const renderStatusChip = (status?: string) => {
 
   return (
     <Chip
-      label={safeStatus.toUpperCase()}
+      label={safeStatus.replace('_', ' ').toUpperCase()}
       color={colorMap[safeStatus] || 'default'}
       size="small"
-      onClick={() => {}}
     />
   )
 }

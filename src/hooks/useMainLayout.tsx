@@ -2,6 +2,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import PaidIcon from '@mui/icons-material/Paid'
+import InsertChartIcon from '@mui/icons-material/InsertChart'
 import SettingsIcon from '@mui/icons-material/Settings'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 
@@ -24,8 +25,8 @@ const useMainLayout = () => {
   }
 
   const menuItems = [
-    // { label: 'Dashboard', path: '/dashboard', icon: <DashboardIcon /> },
-    { label: 'Cobros', path: '/dashboard', icon: <PaidIcon /> },
+    { label: 'Resumen', path: '/dashboard', icon: <InsertChartIcon  /> },
+    { label: 'Cobros', path: '/charge', icon: <PaidIcon /> },
     { label: 'Configuración', path: '/configuration', icon: <SettingsIcon /> },
     { label: 'Solicitudes de Pago', path: '/payment-requests', icon: <RequestQuoteIcon /> },
   ]

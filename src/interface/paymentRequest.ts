@@ -7,7 +7,7 @@ export interface PaymentRequest {
   amount: number
   paymentType: 'Yape' | 'Plin' | 'Transferencia' | 'Efectivo'
   description?: string
-  status: 'pending' | 'paid' | 'expired'
+  status: 'pending' | 'paid' | 'expired' | 'cancelled' | 'review_pending'
   expirationDate: string
   paymentDate?: string
   createdAt: string

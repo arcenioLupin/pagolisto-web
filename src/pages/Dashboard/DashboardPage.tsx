@@ -1,76 +1,100 @@
-import { useEffect } from "react";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import ChargesTable from "@/components/charges/ChargesTable";
-import ChargeFilters from "@/components/charges/ChargeFilters";
-import ChargesDeleteDialog from "@/components/dialogs/ChargesDeleteDialog";
-import ChargeModal from "@/components/charges/ChargeModal";
-import { generateInitialData } from "@/utils/chargesUtils";
-import useCharges from "@/hooks/useCharges";
-import type { Charge } from "@/interface/charges";
+import { useEffect, useState } from 'react'
+import { Box, Typography, Divider  } from '@mui/material'
+import { useDashboardFilters } from '@/hooks/useDashboardFilters'
+import DateFilter from '@/components/dashboard/DateFilter'
+import DashboardSummaryCards from '@/components/dashboard/DashboardSummaryCards'
+import { useAuth } from '@/hooks/useAuth'
+import { useDashboardData } from '@/hooks/useDashboardData'
+import DashboardSalesByPaymentTypeChart from '@/components/dashboard/DashboardSalesByPaymentTypeChart'
+import DashboardChargesOverTimeChart from '@/components/dashboard/DashboardChargesOverTimeChart'
+import DashboardPaymentRequestsOverTimeChart from '@/components/dashboard/DashboardPaymentRequestsOverTimeChart'
 
 const DashboardPage = () => {
-  const {
-    modalOpen,
-    setModalOpen,
-    setFilters,
-    deleteDialogOpen,
-    setDeleteDialogOpen,
-    editingCharge,
-    filteredCharges,
-    fetchCharges,
-    handleDeleteChargeClick,
-    handleEdit,
-    confirmDelete,
-    handleCloseChargeModal
-  } = useCharges();
+  const { range, preset, setRange, handlePresetChange } = useDashboardFilters()
+  const { fetchSummary, fetchByPaymentType, fetchChargesOverTime, fetchPaymentRequestsOverTime } = useDashboardData()
+  const { user } = useAuth()
+
+  const [summary, setSummary] = useState({
+    totalSales: 0,
+    chargesCount: 0,
+    paymentRequestsCount: 0
+  })
+
+  const [chargesByMethod, setChargesByMethod] = useState([])
+  const [chargesOverTime, setChargesOverTime] = useState([])
+  const [paymentRequestsOverTime, setPaymentRequestsOverTime] = useState([])  
+
 
   useEffect(() => {
-    fetchCharges();
-  }, [fetchCharges]);
+    const [startDate, endDate] = range
+    const merchantId = user?.merchantId
+    if (startDate && endDate && merchantId) {
+      fetchSummary(merchantId, startDate.toISOString(), endDate.toISOString())
+        .then((data) => {
+          if (data) setSummary(data)
+        })
+    }
+  }, [range, fetchSummary, user?.merchantId])
+
+    useEffect(() => {
+    const [startDate, endDate] = range
+    const merchantId = user?.merchantId
+    if (startDate && endDate && merchantId) {
+      fetchByPaymentType(merchantId, startDate.toISOString(), endDate.toISOString())
+        .then((data) => {
+          if (data) setChargesByMethod(data)
+        })
+    }
+  }, [range, user?.merchantId, fetchByPaymentType])
+
+  useEffect(() => {
+    const [startDate, endDate] = range
+    const merchantId = user?.merchantId
+    if (startDate && endDate && merchantId) {
+      fetchChargesOverTime(merchantId, startDate.toISOString(), endDate.toISOString())
+        .then((data) => {
+          if (data) setChargesOverTime(data)
+        })
+    }
+  }, [range, user?.merchantId, fetchChargesOverTime])
+
+  useEffect(() => {
+    const [startDate, endDate] = range
+    const merchantId = user?.merchantId
+    if (startDate && endDate && merchantId) {
+      fetchPaymentRequestsOverTime(merchantId, startDate.toISOString(), endDate.toISOString())
+        .then((data) => {
+          if (data) setPaymentRequestsOverTime(data)
+        })
+    }
+  }, [range, user?.merchantId, fetchPaymentRequestsOverTime])
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="subtitle1">
-        Este es tu panel principal. Aquí verás tus cobros recientes y otra
-        información relevante.
+    <Box p={2}>
+      <Typography variant="h5" gutterBottom>
+        Resumen de Actividad
       </Typography>
 
-      {/* Filtros */}
-      <Box mt={3}>
-        <ChargeFilters onFilterChange={setFilters} />
-      </Box>
-
-      {/* Botón de nuevo cobro */}
-      <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2, mb: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setModalOpen(true)}
-        >
-          + Nuevo Cobro
-        </Button>
-      </Stack>
-
-      {/* Tabla filtrada */}
-      <ChargesTable
-        charges={filteredCharges}
-        onDelete={handleDeleteChargeClick}
-        onEdit={handleEdit}
-      />
-      <ChargeModal
-        open={modalOpen}
-        onClose={handleCloseChargeModal}
-        initialData={generateInitialData(editingCharge || ({} as Charge))}
+      <DateFilter
+        preset={preset}
+        range={range}
+        onPresetChange={handlePresetChange}
+        onRangeChange={setRange}
       />
 
-      {/* Diálogo de confirmación */}
-      <ChargesDeleteDialog
-        setDeleteDialogOpen={setDeleteDialogOpen}
-        deleteDialogOpen={deleteDialogOpen}
-        confirmDelete={confirmDelete}
+      <DashboardSummaryCards
+        totalSales={summary.totalSales}
+        chargesCount={summary.chargesCount}
+        paymentRequestsCount={summary.paymentRequestsCount}
       />
+      <Divider sx={{ my: 3 }} />
+      <DashboardSalesByPaymentTypeChart  data={chargesByMethod}/>
+      <Divider sx={{ my: 3 }} />
+      <DashboardChargesOverTimeChart  data={chargesOverTime} />
+      <Divider sx={{ my: 3 }} />
+      <DashboardPaymentRequestsOverTimeChart data={paymentRequestsOverTime} />
     </Box>
-  );
-};
+  )
+}
 
-export default DashboardPage;
+export default DashboardPage
