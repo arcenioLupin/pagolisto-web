@@ -9,6 +9,8 @@ const useMarkAsPaid = () => {
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
   const [requestData, setRequestData] = useState<PaymentRequest | null>(null)
+  const [merchantQr, setMerchantQr] = useState<{ yape?: string; plin?: string }>({});
+
 
   useEffect(() => {
     const fetchRequestData = async () => {
@@ -19,7 +21,12 @@ const useMarkAsPaid = () => {
         )
         const result: ApiPaymentRequestResponse = await res.json()
         if (res.ok && result.data) {
-          setRequestData(result.data)
+          const { paymentRequest, merchantQr } = result.data;
+          setRequestData(paymentRequest);
+          setMerchantQr({
+            yape: merchantQr?.yape ?? undefined,
+            plin: merchantQr?.plin ?? undefined,
+          });
         } else {
           setStatus('error')
           setMessage(result.message || 'No se pudo obtener los datos')
@@ -50,9 +57,10 @@ const useMarkAsPaid = () => {
       const result: ApiPaymentRequestResponse = await res.json()
       setMessage(result.message)
 
+      
       if (res.ok && result.data) {
         setStatus('success')
-        setRequestData(result.data)
+        setRequestData(result.data.paymentRequest)
       } else {
         setStatus('error')
       }
@@ -75,6 +83,7 @@ const useMarkAsPaid = () => {
     requestData,
     formatDate,
     handleMarkAsPaid,
+    merchantQr
 
   }
 }

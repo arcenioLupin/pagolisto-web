@@ -15,10 +15,17 @@ export interface PaymentRequest {
 }
 
 export interface ApiPaymentRequestResponse {
-  success: boolean
-  message: string
-  data: PaymentRequest | null
+  success: boolean;
+  message: string;
+  data: {
+    paymentRequest: PaymentRequest;
+    merchantQr?: {
+      yape?: string | null;
+      plin?: string | null;
+    };
+  } | null;
 }
+
 
 export interface CancelPaymentProps {
   setOpenConfirm: (open: boolean) => void

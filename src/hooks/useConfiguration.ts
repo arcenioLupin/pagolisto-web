@@ -14,7 +14,9 @@ const useConfiguration = () => {
       defaultValues: {
         phone: '',
         address: '',
-        paymentsMethod: ''
+        paymentsMethod: '',
+        walletQrImageYape: null,
+        walletQrImagePlin: null,
       }
     });
 
@@ -29,6 +31,8 @@ const fetchConfig = async () => {
         setValue('phone', result.data.phone || '')
         setValue('address', result.data.address || '')
         setValue('paymentsMethod', result.data.paymentsMethod?.join(', ') || '')
+        setValue('walletQrImageYape', result.data.walletQrImageYape || null)
+        setValue('walletQrImagePlin', result.data.walletQrImagePlin || null)
       } else if (res.status !== 404 && res.status !== 401) {
         enqueueSnackbar('Error al cargar configuración', { variant: 'error' })
       }
@@ -47,7 +51,9 @@ const onSubmit = async (data: ConfigFormData) => {
         },
         body: JSON.stringify({
           ...data,
-          paymentsMethod: data.paymentsMethod.split(',').map((m) => m.trim())
+          paymentsMethod: data.paymentsMethod.split(',').map((m) => m.trim()),
+          walletQrImageYape: data.walletQrImageYape || null,
+          walletQrImagePlin: data.walletQrImagePlin || null,
         })
       })
 

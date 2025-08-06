@@ -65,6 +65,73 @@ const ConfigurationForm = () => {
           )}
         />
 
+        {/* QR de Yape */}
+        <Controller
+          name="walletQrImageYape"
+          control={control}
+          render={({ field }) => (
+            <>
+              <Typography variant="subtitle2" mt={2}>QR de Yape</Typography>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    field.onChange(reader.result?.toString() || '');
+                  };
+                  reader.readAsDataURL(file);
+                }}
+              />
+              {field.value && (
+                <Box mt={1}>
+                  <img
+                    src={field.value}
+                    alt="QR Yape"
+                    style={{ maxWidth: '150px', borderRadius: '8px' }}
+                  />
+                </Box>
+              )}
+            </>
+          )}
+        />
+
+        {/* QR de Plin */}
+        <Controller
+          name="walletQrImagePlin"
+          control={control}
+          render={({ field }) => (
+            <>
+              <Typography variant="subtitle2" mt={2}>QR de Plin</Typography>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    field.onChange(reader.result?.toString() || '');
+                  };
+                  reader.readAsDataURL(file);
+                }}
+              />
+              {field.value && (
+                <Box mt={1}>
+                  <img
+                    src={field.value}
+                    alt="QR Plin"
+                    style={{ maxWidth: '150px', borderRadius: '8px' }}
+                  />
+                </Box>
+              )}
+            </>
+          )}
+        />
+
+
         <Box mt={2} display="flex" justifyContent="center">
           <Button type="submit" variant="contained" disabled={isSubmitting}>
             {isSubmitting ? "Guardando..." : "Guardar configuración"}

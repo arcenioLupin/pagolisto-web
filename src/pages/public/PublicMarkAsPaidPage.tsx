@@ -13,7 +13,7 @@ import useMarkAsPaid from '@/hooks/useMarkAsPaid'
 
 const PublicMarkAsPaidPage = () => {
 
-  const { loading, submitting, status, message, requestData, formatDate, handleMarkAsPaid } = useMarkAsPaid()
+  const { loading, submitting, status, message, requestData, formatDate, handleMarkAsPaid, merchantQr } = useMarkAsPaid()
 
   
   if (loading) {
@@ -23,6 +23,7 @@ const PublicMarkAsPaidPage = () => {
       </Box>
     )
   }
+  console.log('requestData: ', requestData)
 
   if (status === 'error' || !requestData) {
     return (
@@ -59,6 +60,59 @@ const PublicMarkAsPaidPage = () => {
         <Typography>Pagado el: {formatDate(requestData.paymentDate)}</Typography>
         <Typography>Estado: {requestData.status}</Typography>
       </Paper>
+      {requestData.status === 'pending' && (merchantQr?.yape || merchantQr?.plin) && (
+        <Box mt={4}>
+          <Typography variant="h6" gutterBottom>
+            Escanea y paga con tu app
+          </Typography>
+
+          {merchantQr.yape && (
+            <Box mt={2}>
+              <Typography variant="subtitle2">QR de Yape</Typography>
+              <a href={merchantQr.yape} download="qr-yape.png">
+                <img
+                  src={merchantQr.yape}
+                  alt="QR Yape"
+                  style={{ maxWidth: 200, borderRadius: 8 }}
+                />
+              </a>
+              <Box mt={1}>
+                <Button
+                  variant="outlined"
+                  href={merchantQr.yape}
+                  download="qr-yape.png"
+                  size="small"
+                >
+                  Descargar QR Yape
+                </Button>
+              </Box>
+            </Box>
+          )}
+
+          {merchantQr.plin && (
+            <Box mt={4}>
+              <Typography variant="subtitle2">QR de Plin</Typography>
+              <a href={merchantQr.plin} download="qr-plin.png">
+                <img
+                  src={merchantQr.plin}
+                  alt="QR Plin"
+                  style={{ maxWidth: 200, borderRadius: 8 }}
+                />
+              </a>
+              <Box mt={1}>
+                <Button
+                  variant="outlined"
+                  href={merchantQr.plin}
+                  download="qr-plin.png"
+                  size="small"
+                >
+                  Descargar QR Plin
+                </Button>
+              </Box>
+            </Box>
+          )}
+        </Box>
+      )}
 
       {requestData.status === 'pending' && status !== 'success' && (
         <Button
