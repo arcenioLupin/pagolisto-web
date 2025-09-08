@@ -18,7 +18,8 @@ const useSignup = () => {
     
       const onSubmit = async (data: SignupFormValues) => {
         try {
-          const res = await fetch('http://localhost:3000/api/auth/register', {
+          const url = `${import.meta.env.VITE_API_BASE_URL}/auth/register`
+          const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
