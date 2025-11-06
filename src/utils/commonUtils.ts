@@ -6,5 +6,5 @@
        cancelled: 'Cancelado',
        review_pending: 'Revisión pendiente' // Nuevo estado
       }
-    return descriptions[ status ?? 'pending'] || 'Estado desconocido'
+    return descriptions[ status ?? 'pending'] || 'Estado desconocido';
   }
