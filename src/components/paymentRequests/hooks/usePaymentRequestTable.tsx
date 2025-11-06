@@ -1,4 +1,5 @@
 import type { PaymentRequest } from "@/interface/paymentRequest"
+import { getStatusDescription } from "@/utils/commonUtils"
 import { Chip } from "@mui/material"
 import { useState } from "react"
 
@@ -19,8 +20,7 @@ const usePaymentRequestTable = (paymentRequests: PaymentRequest[]) => {
     setPage(0)
   }
 
-
-const renderStatusChip = (status?: string) => {
+const renderStatusChip = ( status?: string) => {
   const colorMap: Record<string, 'default' | 'success' | 'error' | 'warning' | 'info'> = {
     pending: 'warning',
     review_pending: 'info', // Nuevo estado
@@ -29,11 +29,11 @@ const renderStatusChip = (status?: string) => {
     cancelled: 'default',
   }
 
-  const safeStatus = status ?? 'pending'
+  const safeStatus = status ?? 'pendiente'
 
   return (
     <Chip
-      label={safeStatus.replace('_', ' ').toUpperCase()}
+      label={getStatusDescription(status).replace('_', ' ').toUpperCase()}
       color={colorMap[safeStatus] || 'default'}
       size="small"
     />
