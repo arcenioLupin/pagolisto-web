@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { capitalize, getStatusColor } from '@/utils/chargesUtils';
 import type { Charge } from '@/interface/charges';
+import { getStatusDescription } from '@/utils/commonUtils';
 
 interface ChargeCardProps {
   charge: Charge;
@@ -32,7 +33,7 @@ const ChargeCard = ({ charge, onEdit, onDelete }: ChargeCardProps) => {
         <Stack direction="row" alignItems="center" gap={1} mt={1}>
           <Typography variant="body2">Estado:</Typography>
           <Chip
-            label={capitalize(charge.status)}
+            label={capitalize(getStatusDescription(charge.status))}
             color={getStatusColor(charge.status)}
             size="small"
             sx={{
