@@ -18,6 +18,7 @@ import { capitalize, getStatusColor } from '@/utils/chargesUtils';
 import useChargeComponent from './hooks/useChargeTable';
 import useResponsive from '../../hooks/useResponsive';
 import ChargesCardList from './ChargesCardList';
+import { getStatusDescription } from '@/utils/commonUtils';
 
 const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
   const {
@@ -41,7 +42,7 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
     );
   }
 
-  // 👉 Mostrar versión Card en móviles
+  // Mostrar versión Card en móviles
   if (isMobile) {
     return (
       <ChargesCardList
@@ -52,7 +53,7 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
     );
   }
 
-  // 👉 Versión tabla para pantallas más grandes
+  // Versión tabla para pantallas más grandes
   return (
     <Paper elevation={0} sx={{ p: 2, borderRadius: '8px' }}>
       <Table>
@@ -82,7 +83,7 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
               <TableCell>{charge.paymentType}</TableCell>
               <TableCell>
                 <Chip
-                  label={capitalize(charge.status === 'paid' ? 'pagado' : charge.status)}
+                  label={capitalize(getStatusDescription(charge.status))}
                   color={getStatusColor(charge.status)}
                   size="small"
                   sx={{
