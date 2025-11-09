@@ -8,12 +8,14 @@ import { useDashboardData } from '@/hooks/useDashboardData'
 import DashboardSalesByPaymentTypeChart from '@/components/dashboard/DashboardSalesByPaymentTypeChart'
 import DashboardChargesOverTimeChart from '@/components/dashboard/DashboardChargesOverTimeChart'
 import DashboardPaymentRequestsOverTimeChart from '@/components/dashboard/DashboardPaymentRequestsOverTimeChart'
+  // import useResponsive from '@/hooks/useResponsive';
+
 
 const DashboardPage = () => {
   const { range, preset, setRange, handlePresetChange } = useDashboardFilters()
   const { fetchSummary, fetchByPaymentType, fetchChargesOverTime, fetchPaymentRequestsOverTime } = useDashboardData()
   const { user } = useAuth()
-
+  // const { isMobile } = useResponsive();
   const [summary, setSummary] = useState({
     totalSales: 0,
     chargesCount: 0,
@@ -70,29 +72,51 @@ const DashboardPage = () => {
   }, [range, user?.merchantId, fetchPaymentRequestsOverTime])
 
   return (
-    <Box p={2}>
+    <Box
+      sx={{
+        px: { xs: 1.5, md: 2 },
+        py: 2,
+        overflowX: 'hidden',      // <- corta cualquier desborde
+        maxWidth: 1280,
+        mx: 'auto',
+      }}
+    >
       <Typography variant="h5" gutterBottom>
         Resumen de Actividad
       </Typography>
 
-      <DateFilter
-        preset={preset}
-        range={range}
-        onPresetChange={handlePresetChange}
-        onRangeChange={setRange}
-      />
+      
+          <DateFilter
+            preset={preset}
+            range={range}
+            onPresetChange={handlePresetChange}
+            onRangeChange={setRange}
+          />
 
-      <DashboardSummaryCards
-        totalSales={summary.totalSales}
-        chargesCount={summary.chargesCount}
-        paymentRequestsCount={summary.paymentRequestsCount}
-      />
+       <Box sx={{ mt: 2, overflowX: 'hidden' }}>
+          <DashboardSummaryCards
+            totalSales={summary.totalSales}
+            chargesCount={summary.chargesCount}
+            paymentRequestsCount={summary.paymentRequestsCount}
+          />
+        </Box>  
+
       <Divider sx={{ my: 3 }} />
-      <DashboardSalesByPaymentTypeChart  data={chargesByMethod}/>
+      <Box sx={{ overflowX: 'hidden' }}>
+        <DashboardSalesByPaymentTypeChart  data={chargesByMethod}/>
+      </Box>
+
       <Divider sx={{ my: 3 }} />
-      <DashboardChargesOverTimeChart  data={chargesOverTime} />
+
+       <Box sx={{ overflowX: 'hidden' }}>
+        <DashboardChargesOverTimeChart  data={chargesOverTime} />
+      </Box>
+
       <Divider sx={{ my: 3 }} />
-      <DashboardPaymentRequestsOverTimeChart data={paymentRequestsOverTime} />
+
+       <Box sx={{ overflowX: 'hidden' }}>
+         <DashboardPaymentRequestsOverTimeChart data={paymentRequestsOverTime} />
+      </Box>
     </Box>
   )
 }

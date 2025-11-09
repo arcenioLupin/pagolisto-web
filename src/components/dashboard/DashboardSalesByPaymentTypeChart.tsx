@@ -1,6 +1,7 @@
 // src/components/dashboard/DashboardSalesByPaymentTypeChart.tsx
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { Card, CardContent, Typography } from '@mui/material'
+import useResponsive from '@/hooks/useResponsive'
 
 type PaymentTypeData = {
   paymentType: string
@@ -14,13 +15,16 @@ interface Props {
 }
 
 const DashboardSalesByPaymentTypeChart = ({ data }: Props) => {
+  const { isMobile } = useResponsive();
+  const height = isMobile ? 260 : 300;
+  const radius = isMobile ? 80 : 100;
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ overflowX: 'hidden' }}>
+      <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
         <Typography variant="subtitle1" gutterBottom>
           Ventas por Método de Pago
         </Typography>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={height}>
           <PieChart>
             <Pie
               data={data}
@@ -28,8 +32,8 @@ const DashboardSalesByPaymentTypeChart = ({ data }: Props) => {
               nameKey="paymentType"
               cx="50%"
               cy="50%"
-              outerRadius={100}
-              label
+              outerRadius={radius}
+              label={!isMobile}
             >
               {data.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

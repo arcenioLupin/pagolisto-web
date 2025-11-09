@@ -1,6 +1,7 @@
 // src/components/dashboard/DashboardChargesOverTimeChart.tsx
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts'
 import { Card, CardContent, Typography } from '@mui/material'
+import useResponsive from '@/hooks/useResponsive'
 
 interface Props {
   data: {
@@ -11,14 +12,17 @@ interface Props {
 }
 
 const DashboardChargesOverTimeChart = ({ data }: Props) => {
+  const { isMobile } = useResponsive();
+  const height = isMobile ? 260 : 300;
+
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ overflowX: 'hidden' }}>
+      <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
         <Typography variant="subtitle1" gutterBottom>
           Cobros en el Tiempo
         </Typography>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={data}>
+        <ResponsiveContainer width="100%" height={height}>
+          <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
             <XAxis dataKey="_id" />
             <YAxis />
             <Tooltip />

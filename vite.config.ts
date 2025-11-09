@@ -12,8 +12,8 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: 'Pagolisto',
-        short_name: 'Pagolisto',
+        name: 'PagoListo',
+        short_name: 'PagoListo',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
