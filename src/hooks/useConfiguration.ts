@@ -14,7 +14,7 @@ const useConfiguration = () => {
       defaultValues: {
         phone: '',
         address: '',
-        paymentsMethod: '',
+        paymentsMethod: [],
         walletQrImageYape: null,
         walletQrImagePlin: null,
       }
@@ -30,7 +30,7 @@ const fetchConfig = async () => {
       if (res.ok) {
         setValue('phone', result.data.phone || '')
         setValue('address', result.data.address || '')
-        setValue('paymentsMethod', result.data.paymentsMethod?.join(', ') || '')
+        setValue('paymentsMethod', result.data.paymentsMethod && Array.isArray(result.data.paymentsMethod) ? result.data.paymentsMethod : [])
         setValue('walletQrImageYape', result.data.walletQrImageYape || null)
         setValue('walletQrImagePlin', result.data.walletQrImagePlin || null)
       } else if (res.status !== 404 && res.status !== 401) {
@@ -51,7 +51,7 @@ const onSubmit = async (data: ConfigFormData) => {
         },
         body: JSON.stringify({
           ...data,
-          paymentsMethod: data.paymentsMethod.split(',').map((m) => m.trim()),
+          paymentsMethod: data.paymentsMethod,
           walletQrImageYape: data.walletQrImageYape || null,
           walletQrImagePlin: data.walletQrImagePlin || null,
         })
@@ -61,11 +61,19 @@ const onSubmit = async (data: ConfigFormData) => {
 
       enqueueSnackbar('Configuración guardada exitosamente', { variant: 'success' })
       const result = await res.json()
-      console.log('✅ Configuración actualizada:', result)
+      console.log('Configuración actualizada:', result)
     } catch (error) {
       enqueueSnackbar(`Error al guardar configuración: ${error}`, { variant: 'error' })
     }
   };
+
+  const paymentMethodOptions = [
+  { value: 'Yape', label: 'Yape' },
+  { value: 'Plin', label: 'Plin' },
+  { value: 'Efectivo', label: 'Efectivo' },
+  { value: 'Transferencia', label: 'Transferencia' },
+ ];
+
 
   return{
    fetchConfig,
@@ -73,7 +81,8 @@ const onSubmit = async (data: ConfigFormData) => {
    handleSubmit,
    errors,
    isSubmitting,
-   onSubmit
+   onSubmit,
+   paymentMethodOptions
   }
 }
 

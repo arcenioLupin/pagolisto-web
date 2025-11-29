@@ -1,10 +1,10 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Chip, FormControl, FormHelperText, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { useEffect } from "react";
 import useConfiguration from "@/hooks/useConfiguration";
 
 const ConfigurationForm = () => {
-  const { fetchConfig, control, handleSubmit, errors, isSubmitting, onSubmit } =
+  const { fetchConfig, control, handleSubmit, errors, isSubmitting, onSubmit, paymentMethodOptions } =
     useConfiguration();
 
   useEffect(() => {
@@ -49,21 +49,79 @@ const ConfigurationForm = () => {
           )}
         />
 
-        <Controller
-          name="paymentsMethod"
-          control={control}
-          rules={{ required: "Este campo es obligatorio" }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Métodos de pago (separados por coma)"
-              fullWidth
-              margin="normal"
-              error={!!errors.paymentsMethod}
-              helperText={errors.paymentsMethod?.message}
-            />
+
+        <FormControl
+          fullWidth
+          margin="normal"
+          error={!!errors.paymentsMethod}
+        >
+          <InputLabel id="payments-method-label">
+            Métodos de pago aceptados
+          </InputLabel>
+
+          <Controller
+            name="paymentsMethod"
+            control={control}
+            rules={{ required: "Selecciona al menos un método de pago" }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                labelId="payments-method-label"
+                multiple
+                input={<OutlinedInput label="Métodos de pago aceptados" />}
+                // aseguramos que siempre sea array
+                value={field.value || []}
+                onChange={(event) => {
+                  const value = event.target.value as string[];
+                  field.onChange(value);
+                }}
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => {
+                      const option = paymentMethodOptions.find(
+                        (opt) => opt.value === value
+                      );
+
+                      const label = option?.label ?? value;
+
+                      const handleDelete = (e: React.MouseEvent) => {
+                        e.stopPropagation(); // evitar que se abra el menú
+                        const newValue = (field.value || []).filter(
+                          (m: string) => m !== value
+                        );
+                        field.onChange(newValue);
+                      };
+
+                      return (
+                        <Chip
+                          key={value}
+                          label={label}
+                          size="small"
+                          onMouseDown={(e) => e.stopPropagation()} // no abrir el select al hacer click en la X
+                          onDelete={handleDelete}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+              >
+                {paymentMethodOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+
+          {errors.paymentsMethod && (
+            <FormHelperText>
+              {errors.paymentsMethod.message as string}
+            </FormHelperText>
           )}
-        />
+        </FormControl>
+
+
 
         {/* QR de Yape */}
         <Controller

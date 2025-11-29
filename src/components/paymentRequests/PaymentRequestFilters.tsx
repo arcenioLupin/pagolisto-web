@@ -7,6 +7,7 @@ import {
   Select
 } from '@mui/material'
 import usePaymentRequestFilters from './hooks/usePaymentRequestFilters'
+import { paymentTypes, type PaymentType } from '@/utils/chargesUtils'
 
 const PaymentRequestFilters = ({ onFilterChange }: PaymentRequestFiltersProps) => {
 
@@ -27,9 +28,13 @@ const PaymentRequestFilters = ({ onFilterChange }: PaymentRequestFiltersProps) =
           onChange={handlePaymentTypeChange}
         >
           <MenuItem value="">Todo</MenuItem>
-          <MenuItem value="Yape">Yape</MenuItem>
-          <MenuItem value="Plin">Plin</MenuItem>
-          <MenuItem value="Efectivo">Efectivo</MenuItem>
+         {
+            paymentTypes.map((method:PaymentType) => (
+               <MenuItem key={method} value={method}>
+                     {method}
+               </MenuItem>
+              ))
+         }
         </Select>
       </FormControl>
 

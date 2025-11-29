@@ -15,6 +15,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { paymentTypes } from "@/utils/chargesUtils";
 import type { PaymentRequestModalProps } from "@/interface/paymentRequest";
 import usePaymentRequestModal from "./hooks/usePaymentRequestModal";
+import { useMerchantPaymentMethods } from "@/hooks/useMerchantPaymentMethods";
 
 const PaymentRequestModal = ({
   open,
@@ -34,18 +35,23 @@ const PaymentRequestModal = ({
       }
     );
 
-  useEffect(() => {
+    const { paymentMethods, loading } = useMerchantPaymentMethods();
+    
+      useEffect(() => {
     if (initialData) {
+      const availableMethods =
+        paymentMethods && paymentMethods.length > 0 ? paymentMethods : paymentTypes;
+
       const validData = {
         ...initialData,
-        paymentType: paymentTypes.includes(initialData.paymentType)
+        paymentType: availableMethods.includes(initialData.paymentType)
           ? initialData.paymentType
-          : "Yape", // fallback seguro
+          : availableMethods[0], 
       };
 
       reset(validData);
     }
-  }, [initialData, reset]);
+  }, [initialData, reset, paymentMethods]);
 
   return (
     <Dialog
@@ -88,10 +94,11 @@ const PaymentRequestModal = ({
                 fullWidth
                 margin="normal"
                 {...field}
+                disabled={loading}
                 error={!!errors.paymentType}
                 helperText={errors.paymentType?.message}
               >
-                {paymentTypes.map((type) => (
+                {paymentMethods.map((type) => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>
@@ -122,7 +129,6 @@ const PaymentRequestModal = ({
                   value={field.value}
                   onChange={(date) => {
                     if (date) {
-                      // 🔧 Normaliza la fecha a medianoche local
                       const normalized = new Date(date);
                       normalized.setHours(0, 0, 0, 0);
                       field.onChange(normalized);
