@@ -7,6 +7,7 @@ import {
   Select,
 } from "@mui/material";
 import useChargeFilter from "./hooks/useChargeFilter";
+import { paymentTypes, type PaymentType } from "@/utils/chargesUtils";
 
 
 const ChargeFilters = ({ onFilterChange }: ChargeFiltersProps) => {
@@ -28,11 +29,13 @@ const ChargeFilters = ({ onFilterChange }: ChargeFiltersProps) => {
           onChange={handlePaymentTypeChange}
         >
           <MenuItem value="">Todo</MenuItem>
-          <MenuItem value="Yape">Yape</MenuItem>
-          <MenuItem value="Plin">Plin</MenuItem>
-          <MenuItem value="Tunki">Tunki</MenuItem>
-          <MenuItem value="Transferencia">Transferencia</MenuItem>
-          <MenuItem value="Efectivo">Efectivo</MenuItem>
+          {
+             paymentTypes.map((method:PaymentType) => (
+              <MenuItem key={method} value={method}>
+                {method}
+              </MenuItem>
+            ))
+          }
         </Select>
       </FormControl>
 

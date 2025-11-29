@@ -12,6 +12,7 @@ import { Controller } from "react-hook-form";
 import { paymentTypes } from "@/utils/chargesUtils";
 import type { ChargeModalProps } from "@/interface/charges";
 import useChargeModal from "./hooks/useChargeModal";
+import { useMerchantPaymentMethods } from "../../hooks/useMerchantPaymentMethods";
 
 
 const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
@@ -34,60 +35,26 @@ const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
       description: "",
     }, onClose
   );
+   const { paymentMethods, loading } = useMerchantPaymentMethods();
 
-  useEffect(() => {
+    useEffect(() => {
     if (initialData) {
+      // usamos los métodos de config; si por alguna razón vienen vacíos, usamos los defaults
+      const availableMethods =
+        paymentMethods && paymentMethods.length > 0 ? paymentMethods : paymentTypes;
+
       const validData = {
         ...initialData,
-        paymentType: paymentTypes.includes(initialData.paymentType)
+        paymentType: availableMethods.includes(initialData.paymentType)
           ? initialData.paymentType
-          : "Yape", // fallback seguro
+          : availableMethods[0], // fallback seguro: primer método disponible
       };
 
       reset(validData);
     }
-  }, [initialData, reset]);
+  }, [initialData, reset, paymentMethods]);
 
- /*const onSubmit = async (data: NewChargeFormData) => {
-    try {
-      const url = initialData?._id
-        ? `${import.meta.env.VITE_API_BASE_URL}/charges/${initialData._id}`
-        : `${import.meta.env.VITE_API_BASE_URL}/charges`;
 
-      const method = initialData?._id ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) throw new Error("Error en la operación");
-
-      const result = await res.json();
-
-      if (initialData?._id) {
-        updateCharge(result.data);
-        enqueueSnackbar("Charge actualizado con éxito", { variant: "success" });
-      } else {
-        addCharge(result.data);
-        enqueueSnackbar("Charge creado con éxito", { variant: "success" });
-      }
-
-      onClose();
-      reset();
-    } catch (error) {
-      enqueueSnackbar("Error al guardar el charge", { variant: "error" });
-    }
-  };
-
-  const getButtonCgargeText = (): string => {
-    if (initialData?._id) return "Actualizar";
-    return "Crear";
-  };*/
 
   return (
     <Dialog
@@ -122,6 +89,7 @@ const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
             helperText={errors.amount?.message}
           />
 
+
           <Controller
             name="paymentType"
             control={control}
@@ -132,10 +100,11 @@ const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
                 fullWidth
                 margin="normal"
                 {...field}
+                disabled={loading}
                 error={!!errors.paymentType}
                 helperText={errors.paymentType?.message}
               >
-                {paymentTypes.map((type) => (
+                {paymentMethods.map((type) => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>
@@ -143,6 +112,7 @@ const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
               </TextField>
             )}
           />
+
 
           <TextField
             label="Descripción"
