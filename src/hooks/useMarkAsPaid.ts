@@ -10,6 +10,7 @@ const useMarkAsPaid = () => {
   const [message, setMessage] = useState('')
   const [requestData, setRequestData] = useState<PaymentRequest | null>(null)
   const [merchantQr, setMerchantQr] = useState<{ yape?: string; plin?: string }>({});
+  const [ merchantPhone, setMerchantPhone] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -21,12 +22,13 @@ const useMarkAsPaid = () => {
         )
         const result: ApiPaymentRequestResponse = await res.json()
         if (res.ok && result.data) {
-          const { paymentRequest, merchantQr } = result.data;
+          const { paymentRequest, merchantQr, phone } = result.data;
           setRequestData(paymentRequest);
           setMerchantQr({
             yape: merchantQr?.yape ?? undefined,
             plin: merchantQr?.plin ?? undefined,
           });
+          setMerchantPhone(phone ?? null);
         } else {
           setStatus('error')
           setMessage(result.message || 'No se pudo obtener los datos')
@@ -83,7 +85,8 @@ const useMarkAsPaid = () => {
     requestData,
     formatDate,
     handleMarkAsPaid,
-    merchantQr
+    merchantQr,
+    merchantPhone,
 
   }
 }
