@@ -23,6 +23,7 @@ export interface ApiPaymentRequestResponse {
       yape?: string | null;
       plin?: string | null;
     };
+    phone?: string | null;
   } | null;
 }
 
