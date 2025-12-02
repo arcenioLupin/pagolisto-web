@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,9 +7,10 @@ import {
   IconButton,
   Box,
   Stack,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { capitalize, getStatusColor } from '@/utils/chargesUtils';
 import type { Charge } from '@/interface/charges';
 import { getStatusDescription } from '@/utils/commonUtils';
@@ -20,12 +22,40 @@ interface ChargeCardProps {
 }
 
 const ChargeCard = ({ charge, onEdit, onDelete }: ChargeCardProps) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleEditClick = () => {
+    if (onEdit) onEdit(charge);
+    handleCloseMenu();
+  };
+
+  const handleDeleteClick = () => {
+    if (onDelete) onDelete(charge._id);
+    handleCloseMenu();
+  };
+
   return (
     <Card variant="outlined" sx={{ borderRadius: '12px', mb: 2 }}>
       <CardContent>
-        <Typography variant="subtitle1" fontWeight="bold">
-          Cliente: {charge.client}
-        </Typography>
+        <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+          <Box>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Cliente: {charge.client}
+            </Typography>
+          </Box>
+
+          <IconButton size="small" onClick={handleOpenMenu}>
+            <MoreVertIcon fontSize="small" />
+          </IconButton>
+        </Box>
 
         <Typography variant="body2">Monto: {charge.amount}</Typography>
         <Typography variant="body2">Método de pago: {charge.paymentType}</Typography>
@@ -49,17 +79,21 @@ const ChargeCard = ({ charge, onEdit, onDelete }: ChargeCardProps) => {
           Fecha creación: {new Date(charge.createdAt).toLocaleString()}
         </Typography>
 
-        <Box display="flex" justifyContent="flex-end" gap={1} mt={2}>
-          <IconButton color="primary" onClick={() => onEdit?.(charge)}>
-            <EditIcon fontSize="small" />
-          </IconButton>
-          <IconButton color="error" onClick={() => onDelete?.(charge._id)}>
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </Box>
+        {/* Menú de acciones en mobile */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseMenu}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <MenuItem onClick={handleEditClick}>Editar</MenuItem>
+          <MenuItem onClick={handleDeleteClick}>Eliminar</MenuItem>
+        </Menu>
       </CardContent>
     </Card>
   );
 };
 
 export default ChargeCard;
+

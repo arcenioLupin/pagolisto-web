@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -10,9 +11,10 @@ import {
   IconButton,
   Paper,
   Chip,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import type { ChargesTableProps } from '@/interface/charges';
 import { capitalize, getStatusColor } from '@/utils/chargesUtils';
 import useChargeComponent from './hooks/useChargeTable';
@@ -29,8 +31,34 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
     handleChangeRowsPerPage,
   } = useChargeComponent(charges);
 
-   const { isMobile, isDesktop } = useResponsive();
-   console.log({isMobile, isDesktop})
+  const { isMobile } = useResponsive();
+
+  // Estado para el menú de acciones (3 puntos)
+  const [actionAnchorEl, setActionAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedChargeId, setSelectedChargeId] = useState<string | null>(null);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, chargeId: string) => {
+    setActionAnchorEl(event.currentTarget);
+    setSelectedChargeId(chargeId);
+  };
+
+  const handleCloseMenu = () => {
+    setActionAnchorEl(null);
+    setSelectedChargeId(null);
+  };
+
+  const handleEditClick = () => {
+    if (!onEdit || !selectedChargeId) return;
+    const charge = charges.find((c) => c._id === selectedChargeId);
+    if (charge) onEdit(charge);
+    handleCloseMenu();
+  };
+
+  const handleDeleteClick = () => {
+    if (!onDelete || !selectedChargeId) return;
+    onDelete(selectedChargeId);
+    handleCloseMenu();
+  };
 
   if (charges.length === 0) {
     return (
@@ -42,7 +70,7 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
     );
   }
 
-  // Mostrar versión Card en móviles
+  // Versión Cards en móviles
   if (isMobile) {
     return (
       <ChargesCardList
@@ -53,7 +81,7 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
     );
   }
 
-  // Versión tabla para pantallas más grandes
+  // Versión tabla para pantallas grandes
   return (
     <Paper elevation={0} sx={{ p: 2, borderRadius: '8px' }}>
       <Table>
@@ -92,22 +120,33 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
                     justifyContent: 'center',
                     textTransform: 'capitalize',
                   }}
-                  onClick={() => {}} // placeholder
                 />
               </TableCell>
               <TableCell>{new Date(charge.createdAt).toLocaleString()}</TableCell>
               <TableCell align="center">
-                <IconButton color="primary" onClick={() => onEdit?.(charge)}>
-                  <EditIcon fontSize="small" />
-                </IconButton>
-                <IconButton color="error" onClick={() => onDelete?.(charge._id)}>
-                  <DeleteIcon fontSize="small" />
+                <IconButton
+                  size="small"
+                  onClick={(e) => handleOpenMenu(e, charge._id)}
+                >
+                  <MoreVertIcon fontSize="small" />
                 </IconButton>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+
+      {/* Menú de acciones (Editar / Eliminar) */}
+      <Menu
+        anchorEl={actionAnchorEl}
+        open={Boolean(actionAnchorEl)}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MenuItem onClick={handleEditClick}>Editar</MenuItem>
+        <MenuItem onClick={handleDeleteClick}>Eliminar</MenuItem>
+      </Menu>
 
       <TablePagination
         component="div"
