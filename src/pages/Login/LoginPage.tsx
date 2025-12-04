@@ -39,7 +39,7 @@ const LoginPage = () => {
           Iniciar Sesión
         </Typography>
         <Typography variant="subtitle2" align="center" color="textSecondary" gutterBottom>
-             Bienvenido a <strong>ControlWallet</strong>
+             Bienvenido a <strong> ControlWallet </strong>
         </Typography>
         <Typography
           variant="caption"
@@ -48,7 +48,7 @@ const LoginPage = () => {
           display="block"
           gutterBottom
         >
-          Una solución de FloweyPay
+          Una solución de FloweyPay.
         </Typography>
 
         <TextField
