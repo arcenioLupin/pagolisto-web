@@ -12,8 +12,8 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: 'PagoListo',
-        short_name: 'PagoListo',
+        name: 'ControlWallet · FloweyPay',
+        short_name: 'ControlWallet',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
