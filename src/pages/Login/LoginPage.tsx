@@ -32,14 +32,23 @@ const LoginPage = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <Box display="flex" justifyContent="center" mb={3}>
-           <img src="/icons/pwa-192x192.png" alt="Logo de Pagolisto" style={{ width: 80, height: 80, borderRadius: '50%' }} />
+           <img src="/icons/pwa-192x192.png" alt="Logo de ControlWallet" style={{ width: 80, height: 80, borderRadius: '50%' }} />
         </Box>
 
         <Typography variant="h4" gutterBottom align="center">
           Iniciar Sesión
         </Typography>
         <Typography variant="subtitle2" align="center" color="textSecondary" gutterBottom>
-             Bienvenido a PagoListo Express
+             Bienvenido a <strong>ControlWallet</strong>
+        </Typography>
+        <Typography
+          variant="caption"
+          align="center"
+          color="textSecondary"
+          display="block"
+          gutterBottom
+        >
+          Una solución de FloweyPay
         </Typography>
 
         <TextField

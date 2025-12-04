@@ -16,7 +16,7 @@ const usePaymentRequestDetailDialog = (request: PaymentRequest | null) => {
       // 1) Mobile moderno: Web Share API → "Enviar link al cliente"
       if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({
-          title: "PagoListo – Link de pago",
+          title: "ControlWallet – Link de pago",
           text: "Te envío el link para completar tu pago:",
           url: clientUrl,
         });
