@@ -5,6 +5,7 @@ import {
   Button,
   Paper,
   Divider,
+  Alert, // 👈 nuevo
 } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
@@ -79,6 +80,22 @@ const PublicMarkAsPaidPage = () => {
     )
   }
 
+  // cálculo de expiración solo por fecha (no por hora)
+  const isExpired = (() => {
+    if (!requestData.expirationDate) return false
+
+    const exp = new Date(requestData.expirationDate)
+    const today = new Date()
+
+    // Normalizamos ambas fechas al inicio del día (00:00:00)
+    exp.setHours(0, 0, 0, 0)
+    today.setHours(0, 0, 0, 0)
+
+    // Expirada solo si la fecha de expiración es ANTES de hoy
+    return exp.getTime() < today.getTime()
+  })()
+
+
   return (
     <Box textAlign="center" mt={8} px={2}>
       {status === 'success' && (
@@ -107,97 +124,111 @@ const PublicMarkAsPaidPage = () => {
         <Typography>Estado: {requestData.status}</Typography>
       </Paper>
 
-      {requestData.status === 'pending' && (merchantQr?.yape || merchantQr?.plin) && (
-        <Box mt={4}>
-          <Typography variant="h6" gutterBottom>
-            Escanea y paga con tu app
-          </Typography>
-
-          {merchantQr.yape && (
-            <Box mt={2}>
-              <Typography variant="subtitle2">QR de Yape</Typography>
-              <a href={merchantQr.yape} download="qr-yape.png">
-                <img
-                  src={merchantQr.yape}
-                  alt="QR Yape"
-                  style={{ maxWidth: 200, borderRadius: 8 }}
-                />
-              </a>
-              <Box mt={1}>
-                <Button
-                  variant="outlined"
-                  href={merchantQr.yape}
-                  download="qr-yape.png"
-                  size="small"
-                >
-                  Descargar QR Yape
-                </Button>
-              </Box>
-            </Box>
-          )}
-
-          {merchantQr.plin && (
-            <Box mt={4}>
-              <Typography variant="subtitle2">QR de Plin</Typography>
-              <a href={merchantQr.plin} download="qr-plin.png">
-                <img
-                  src={merchantQr.plin}
-                  alt="QR Plin"
-                  style={{ maxWidth: 200, borderRadius: 8 }}
-                />
-              </a>
-              <Box mt={1}>
-                <Button
-                  variant="outlined"
-                  href={merchantQr.plin}
-                  download="qr-plin.png"
-                  size="small"
-                >
-                  Descargar QR Plin
-                </Button>
-              </Box>
-
-              {/* 📱 Número para pagar por Yape/Plin + botón copiar */}
-              {merchantPhone && (
-                <Box mt={3}>
-                  <Typography variant="subtitle2" gutterBottom>
-                    Número para pagar por Yape/Plin
-                  </Typography>
-
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    gap={1}
-                  >
-                    <Typography variant="h6" component="span">
-                      {merchantPhone}
-                    </Typography>
-
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={handleCopyPhone}
-                    >
-                      Copiar número
-                    </Button>
-
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      sx={{ mt: 0.5 }}
-                    >
-                      Copia este número y pégalo en tu app de pago.
-                    </Typography>
-                  </Box>
-                </Box>
-              )}
-            </Box>
-          )}
+      {/* Mensaje claro cuando la solicitud está expirada */}
+      {isExpired && (
+        <Box mt={3} maxWidth={400} mx="auto">
+          <Alert severity="warning" variant="outlined">
+            Esta solicitud de pago ha expirado. Si aún necesitas pagar, por favor
+            contacta al comercio para que te envíe un nuevo link.
+          </Alert>
         </Box>
       )}
 
-      {requestData.status === 'pending' && status !== 'success' && (
+      {/* Solo mostramos QR si está pendiente Y NO expirada */}
+      {requestData.status === 'pending' &&
+        !isExpired &&
+        (merchantQr?.yape || merchantQr?.plin) && (
+          <Box mt={4}>
+            <Typography variant="h6" gutterBottom>
+              Escanea y paga con tu app
+            </Typography>
+
+            {merchantQr.yape && (
+              <Box mt={2}>
+                <Typography variant="subtitle2">QR de Yape</Typography>
+                <a href={merchantQr.yape} download="qr-yape.png">
+                  <img
+                    src={merchantQr.yape}
+                    alt="QR Yape"
+                    style={{ maxWidth: 200, borderRadius: 8 }}
+                  />
+                </a>
+                <Box mt={1}>
+                  <Button
+                    variant="outlined"
+                    href={merchantQr.yape}
+                    download="qr-yape.png"
+                    size="small"
+                  >
+                    Descargar QR Yape
+                  </Button>
+                </Box>
+              </Box>
+            )}
+
+            {merchantQr.plin && (
+              <Box mt={4}>
+                <Typography variant="subtitle2">QR de Plin</Typography>
+                <a href={merchantQr.plin} download="qr-plin.png">
+                  <img
+                    src={merchantQr.plin}
+                    alt="QR Plin"
+                    style={{ maxWidth: 200, borderRadius: 8 }}
+                  />
+                </a>
+                <Box mt={1}>
+                  <Button
+                    variant="outlined"
+                    href={merchantQr.plin}
+                    download="qr-plin.png"
+                    size="small"
+                  >
+                    Descargar QR Plin
+                  </Button>
+                </Box>
+
+                {/*Número para pagar por Yape/Plin + botón copiar */}
+                {merchantPhone && (
+                  <Box mt={3}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Número para pagar por Yape/Plin
+                    </Typography>
+
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      gap={1}
+                    >
+                      <Typography variant="h6" component="span">
+                        {merchantPhone}
+                      </Typography>
+
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={handleCopyPhone}
+                      >
+                        Copiar número
+                      </Button>
+
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ mt: 0.5 }}
+                      >
+                        Copia este número y pégalo en tu app de pago.
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+            )}
+          </Box>
+        )}
+
+      {/* Botón "Ya realicé el pago" también se deshabilita por expiración */}
+      {requestData.status === 'pending' && !isExpired && status !== 'success' && (
         <Button
           variant="contained"
           color="primary"
@@ -213,4 +244,3 @@ const PublicMarkAsPaidPage = () => {
 }
 
 export default PublicMarkAsPaidPage
-

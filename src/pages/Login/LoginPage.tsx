@@ -34,12 +34,8 @@ const LoginPage = () => {
         <Box display="flex" justifyContent="center" mb={3}>
            <img src="/icons/pwa-192x192.png" alt="Logo de ControlWallet" style={{ width: 80, height: 80, borderRadius: '50%' }} />
         </Box>
-
-        <Typography variant="h4" gutterBottom align="center">
-          Iniciar Sesión
-        </Typography>
         <Typography variant="subtitle2" align="center" color="textSecondary" gutterBottom>
-             Bienvenido a <strong> ControlWallet </strong>
+          <strong style={{ fontSize: '35px', color: '#1976d2'}}> ControlWallet </strong>
         </Typography>
         <Typography
           variant="caption"
