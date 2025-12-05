@@ -62,7 +62,7 @@ const useMarkAsPaid = () => {
         setStatus("idle")
         setMessage("")
       } catch (error) {
-        console.log(error)
+        console.error(error)
         setStatus("error")
         setMessage(
           "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo nuevamente."
@@ -87,18 +87,42 @@ const useMarkAsPaid = () => {
         }
       )
 
-      const result: ApiPaymentRequestResponse = await res.json()
-      setMessage(result.message)
+      let result: ApiPaymentRequestResponse | null = null
+      try {
+        result = await res.json()
+      } catch {
+        result = null
+      }
 
-      if (res.ok && result.data) {
+
+      if (!res.ok || !result) {
+        setStatus("error")
+        // Si el backend envió un mensaje, lo usamos; si no, uno genérico amigable
+        setMessage( "No se pudo marcar el pago como realizado. Por favor intenta nuevamente en unos minutos." )
+        return
+      }
+
+      // Caso OK con data
+      setMessage(result.message || "Pago marcado como realizado correctamente.")
+      if (result.data) {
         setStatus("success")
         setRequestData(result.data.paymentRequest)
       } else {
+        // Respuesta rara sin data, pero sin reventar
         setStatus("error")
+        if (!result.message) {
+          setMessage(
+            "No se pudo marcar el pago como realizado. Por favor intenta nuevamente en unos minutos."
+          )
+        }
       }
     } catch (error) {
+      console.error('error en catch: ', error)
       setStatus("error")
-      setMessage(`Error inesperado al marcar como pagado ${error}`)
+      // 👇 mensaje genérico de red, sin mostrar `${error}` al usuario
+      setMessage(
+        "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo nuevamente."
+      )
     } finally {
       setSubmitting(false)
     }
@@ -121,3 +145,4 @@ const useMarkAsPaid = () => {
 }
 
 export default useMarkAsPaid
+

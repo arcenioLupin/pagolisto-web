@@ -19,14 +19,14 @@ const DashboardChargesOverTimeChart = ({ data }: Props) => {
     <Card sx={{ overflowX: 'hidden' }}>
       <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
         <Typography variant="subtitle1" gutterBottom>
-          Cobros en el Tiempo
+          Cobros por día
         </Typography>
         <ResponsiveContainer width="100%" height={height}>
           <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
             <XAxis dataKey="_id" />
             <YAxis />
             <Tooltip />
-            <Area type="monotone" dataKey="total" stroke="#8884d8" fill="#8884d8" name="Total S/" />
+            <Area type="monotone" dataKey="total" stroke="#8884d8" fill="#8884d8" name="Total cobrado (S/)" />
           </AreaChart>
         </ResponsiveContainer>
       </CardContent>

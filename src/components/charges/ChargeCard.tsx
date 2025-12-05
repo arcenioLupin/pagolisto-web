@@ -76,7 +76,7 @@ const ChargeCard = ({ charge, onEdit, onDelete }: ChargeCardProps) => {
         </Stack>
 
         <Typography variant="body2" mt={1}>
-          Fecha creación: {new Date(charge.createdAt).toLocaleString()}
+          Fecha de creación: {new Date(charge.createdAt).toLocaleString()}
         </Typography>
 
         {/* Menú de acciones en mobile */}
@@ -87,8 +87,8 @@ const ChargeCard = ({ charge, onEdit, onDelete }: ChargeCardProps) => {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          <MenuItem onClick={handleEditClick}>Editar</MenuItem>
-          <MenuItem onClick={handleDeleteClick}>Eliminar</MenuItem>
+          <MenuItem onClick={handleEditClick}>Editar cobro</MenuItem>
+          <MenuItem onClick={handleDeleteClick}>Eliminar cobro</MenuItem>
         </Menu>
       </CardContent>
     </Card>

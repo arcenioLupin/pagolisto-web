@@ -26,7 +26,7 @@ const DashboardSummaryCards = ({
     <Box display="flex" flexWrap="wrap" gap={1.5} mb={2} sx={{ overflowX: 'hidden' }}>
       <SummaryCard title="Total vendido" value={`S/ ${totalSales.toFixed(2)}`} />
       <SummaryCard title="Cobros registrados" value={chargesCount} />
-      <SummaryCard title="Solicitudes de pago" value={paymentRequestsCount} />
+      <SummaryCard title="Solicitudes de pago creadas" value={paymentRequestsCount} />
     </Box>
   )
 }

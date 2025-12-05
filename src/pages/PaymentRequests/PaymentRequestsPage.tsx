@@ -38,10 +38,10 @@ const PaymentRequestsPage = () => {
     type Row = typeof filteredRequests[number];
 
     const exportColumns: ColumnDef<Row>[] = [
-      { key: '_id' as keyof Row, header: 'Solicitud ID' },
+      { key: '_id' as keyof Row, header: 'ID de solicitud' },
       { key: 'client' as keyof Row, header: 'Cliente' },
       { key: 'amount' as keyof Row,header: 'Monto',formatter: (v) => formatMoney(Number(v ?? 0))},
-      { key: 'paymentType' as keyof Row, header: 'Tipo de pago' },
+      { key: 'paymentType' as keyof Row, header: 'Método de pago' },
       { key: 'status' as keyof Row, header: 'Estado', formatter: (v) => getStatusDescription(String(v ?? ''))},
       { key: 'expirationDate' as keyof Row, header: 'Fecha de Expiración',formatter: (v) => (v ? formatDate(v as string) : '—')},
       { key: 'createdAt' as keyof Row, header: 'Fecha de Creación', formatter: (v) => formatDate(v as string)},
@@ -92,7 +92,7 @@ const PaymentRequestsPage = () => {
             rows={filteredRequests}
             columns={exportColumns}
             fileName={exportFileName}
-            title="Listado de Solicitudes de Pago"
+            title="Listado de solicitudes de pago"
             disabled={filteredRequests.length === 0}
             buttonProps={{
               size: isMobile ? 'small' : 'medium',
