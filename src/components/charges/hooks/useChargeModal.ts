@@ -65,7 +65,7 @@ const useChargeModal = (initialData : NewChargeFormData& { _id?: string }, onClo
     }
   };
 
-  const getButtonCgargeText = (): string => {
+  const getButtonChargeText = (): string => {
     if (initialData?._id) return "Actualizar";
     return "Crear";
   };
@@ -82,7 +82,7 @@ const useChargeModal = (initialData : NewChargeFormData& { _id?: string }, onClo
     token,
     initialData,
     onSubmit,
-    getButtonCgargeText,// Asumiendo que onClose es resetear el formulario
+    getButtonChargeText,// Asumiendo que onClose es resetear el formulario
   };
 };
 

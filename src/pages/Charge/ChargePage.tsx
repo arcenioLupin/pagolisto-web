@@ -36,12 +36,12 @@ const ChargePage = () => {
 
   // Define aquí las columnas para exportación (mismo orden/formatters que tu UI)
     const exportColumns: ColumnDef<Charge>[] = [
-      { key: "_id", header: "Cobro ID" },
+      { key: "_id", header: "ID de cobro" },
       { key: "client", header: "Cliente" },
       { key: "amount", header: "Monto", formatter: (v) => formatCurrency(Number(v ?? 0))},
       { key: "paymentType", header: "Método de pago" },
       { key: "status", header: "Estado",formatter: (v) => getStatusDescription(String(v))},
-      { key: "createdAt", header: "Fecha creación", formatter: (v) => formatDate(v as string)},
+      { key: "createdAt", header: "Fecha de creación", formatter: (v) => formatDate(v as string)},
     ];
 
   const exportFileName = useMemo(
@@ -52,7 +52,7 @@ const ChargePage = () => {
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="subtitle1">
-        Este es tu panel principal. Aquí verás tus cobros recientes y otra información relevante.
+        Aquí puedes revisar y gestionar tus cobros.
       </Typography>
 
       {/* Filtros */}
@@ -85,7 +85,7 @@ const ChargePage = () => {
           rows={filteredCharges}
           columns={exportColumns}
           fileName={exportFileName}
-          title="Listado de Cobros"
+          title="Listado de cobros"
           disabled={filteredCharges.length === 0}
           buttonProps={{
             size: isMobile ? "small" : "medium",

@@ -19,14 +19,14 @@ const DashboardPaymentRequestsOverTimeChart = ({ data }: Props) => {
     <Card sx={{ overflowX: 'hidden' }}>
       <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
         <Typography variant="subtitle1" gutterBottom>
-          Solicitudes de Pago en el Tiempo
+          Solicitudes de pago por día
         </Typography>
         <ResponsiveContainer width="100%" height={height}>
           <BarChart data={data} margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
             <XAxis dataKey="_id" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="total" fill="#82ca9d" name="Total S/" />
+            <Bar dataKey="total" fill="#82ca9d" name="Total cobrado (S/)" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -82,7 +82,7 @@ const DashboardPage = () => {
       }}
     >
       <Typography variant="h5" gutterBottom>
-        Resumen de Actividad
+        Resumen de tu actividad
       </Typography>
 
       

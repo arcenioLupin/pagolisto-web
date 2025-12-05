@@ -48,7 +48,7 @@ const PaymentRequestCard = ({
           </Typography>
 
           <Typography variant="body2">
-            Tipo de pago: {request.paymentType}
+            Método de pago: {request.paymentType}
           </Typography>
 
           <Box mt={0.5}>{renderStatusChip(request.status)}</Box>

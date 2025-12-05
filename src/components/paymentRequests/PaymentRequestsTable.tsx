@@ -66,7 +66,7 @@ const PaymentRequestsTable = ({ paymentRequests, onView, onMarkAsPaid, fetchPaym
           >
             <TableCell sx={{ fontWeight: 'bold' }}>Cliente</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Monto</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Tipo de pago</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Método de pago</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Estado</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Fecha de Expiración</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Fecha de Creación</TableCell>

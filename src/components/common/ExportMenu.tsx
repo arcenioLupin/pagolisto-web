@@ -37,7 +37,7 @@ export default function ExportMenu<T>({ rows, columns, fileName, title, disabled
         disabled={disabled || rows.length === 0}
         {...buttonProps}
       >
-        Exportar
+        Exportar datos
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
         <MenuItem onClick={onExportXLSX}>

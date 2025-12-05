@@ -22,7 +22,7 @@ const DashboardSalesByPaymentTypeChart = ({ data }: Props) => {
     <Card sx={{ overflowX: 'hidden' }}>
       <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
         <Typography variant="subtitle1" gutterBottom>
-          Ventas por Método de Pago
+          Ventas por método de pago
         </Typography>
         <ResponsiveContainer width="100%" height={height}>
           <PieChart>

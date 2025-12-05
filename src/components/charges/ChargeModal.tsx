@@ -25,7 +25,7 @@ const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
     isSubmitting,
     control,
     onSubmit,
-    getButtonCgargeText
+    getButtonChargeText
   } = useChargeModal(
     initialData || {
       client: "",
@@ -96,7 +96,7 @@ const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
             render={({ field }) => (
               <TextField
                 select
-                label="Tipo de pago"
+                label="Método de pago"
                 fullWidth
                 margin="normal"
                 {...field}
@@ -128,7 +128,7 @@ const ChargeModal = ({ open, onClose, initialData }: ChargeModalProps) => {
             Cancelar
           </Button>
           <Button type="submit" variant="contained" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : getButtonCgargeText()}
+            {isSubmitting ? "Guardando..." : getButtonChargeText()}
           </Button>
         </DialogActions>
       </form>

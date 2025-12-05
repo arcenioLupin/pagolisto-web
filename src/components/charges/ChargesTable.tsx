@@ -64,7 +64,7 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
     return (
       <Box mt={4}>
         <Typography variant="body2" color="textSecondary">
-          No charges found.
+          No se encontraron cobros.
         </Typography>
       </Box>
     );
@@ -97,9 +97,9 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
             <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Monto</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Método de pago</TableCell>
             <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Estado</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Fecha creación</TableCell>
+            <TableCell sx={{ fontWeight: 'bold', color: '#333' }}>Fecha de creación</TableCell>
             <TableCell align="center" sx={{ fontWeight: 'bold', color: '#333' }}>
-              Actions
+              Acciones
             </TableCell>
           </TableRow>
         </TableHead>
@@ -144,8 +144,8 @@ const ChargesTable = ({ charges, onEdit, onDelete }: ChargesTableProps) => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={handleEditClick}>Editar</MenuItem>
-        <MenuItem onClick={handleDeleteClick}>Eliminar</MenuItem>
+        <MenuItem onClick={handleEditClick}>Editar cobro</MenuItem>
+        <MenuItem onClick={handleDeleteClick}>Eliminar cobro</MenuItem>
       </Menu>
 
       <TablePagination
